@@ -1,0 +1,22 @@
+version: "3.7"
+
+services:
+  swayvnc-chrome:
+    build:
+      context: .
+    container_name: swayvnc-chrome
+    environment:
+      - XDG_RUNTIME_DIR=/tmp
+      - WLR_BACKENDS=headless
+      - WLR_LIBINPUT_NO_DEVICES=1
+      - SWAYSOCK=/tmp/sway-ipc.sock
+      - MOZ_ENABLE_WAYLAND=1
+      - URL="https://google.com"
+      - BROWSER_FULLSCREEN=1
+    privileged: true
+    ports:
+      - 5910:5910
+      - 7000:7000
+      - 7023:7023
+    devices:
+      - "/dev/dri/renderD128:/dev/dri/renderD128"

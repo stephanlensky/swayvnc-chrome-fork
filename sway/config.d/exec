@@ -1,0 +1,2 @@
+exec wayvnc 0.0.0.0 5910
+exec google-chrome --disable-notifications --disable-popup-blocking --no-first-run --disable-fre --no-default-browser-check
