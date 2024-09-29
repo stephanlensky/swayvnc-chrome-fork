@@ -6,17 +6,13 @@ services:
       context: .
     container_name: swayvnc-chrome
     environment:
-      - XDG_RUNTIME_DIR=/tmp
-      - WLR_BACKENDS=headless
-      - WLR_LIBINPUT_NO_DEVICES=1
-      - SWAYSOCK=/tmp/sway-ipc.sock
-      - MOZ_ENABLE_WAYLAND=1
-      - URL="https://google.com"
-      - BROWSER_FULLSCREEN=1
+      - SWAY_RESOLUTION=1920x1080
+      - WAYVNC_PORT=5910
+      - WAYVNC_ENABLE_AUTH=true
+      - WAYVNC_USERNAME=wayvnc
+      - WAYVNC_PASSWORD=wayvnc
     privileged: true
     ports:
       - 5910:5910
-      - 7000:7000
-      - 7023:7023
     devices:
       - "/dev/dri/renderD128:/dev/dri/renderD128"

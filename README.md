@@ -1,57 +1,35 @@
-# swayvnc-firefox
-VNC Desktop Browser Session in a Container
----
-swayvnc-firefox uses [Sway](https://swaywm.org) with [wayvnc](https://github.com/any1/wayvnc) to create a headless wayland desktop with a browser payload (firefox), to display one or several web pages
+# swayvnc-chrom
 
-## Build
-### Build dependency
-Uses [swayvnc](https://github.com/bbusse/swayvnc) as base image
+swayvnc-chrome uses [Sway](https://swaywm.org) with [wayvnc](https://github.com/any1/wayvnc) to create a headless wayland desktop with a browser payload (Google Chrome), to display one or several web pages.
 
-### Build container
+## Usage
+
+Run with docker-compose:
+
 ```
-$ podman build -t swayvnc-firefox .
+docker-compose up
 ```
 
-## Run Container
-```
-$ export LISTEN_ADDRESS="127.0.0.1" \
-  podman run -e XDG_RUNTIME_DIR=/tmp \
-             -e WLR_BACKENDS=headless \
-             -e WLR_LIBINPUT_NO_DEVICES=1 \
-             -e SWAYSOCK=/tmp/sway-ipc.sock \
-             -e MOZ_ENABLE_WAYLAND=1 \
-             -e TARGET="grafana" \
-             -e URL="https://grafana.example.com" \
-             -e LOGIN_USER="foo" \
-             -e LOGIN_PW="c3VwZXJTZWNyZXRQYXNzd3JvZAo=" \
-             -e BROWSER_FULLSCREEN=1 \
-             -p${LISTEN_ADDRESS}:5000:5000 \
-             -p${LISTEN_ADDRESS}:5100:5100 \
-             -p${LISTEN_ADDRESS}:7023:7023 swayvnc-firefox
-# or
-$ ./run.sh
-```
+### Authentication
 
-## Run Commands
-Run commands with swaymsg by using socat to put them on the network
-Replace $IP with the actual IP you want to listen on
-```
-$ socat UNIX-LISTEN:/tmp/sway-ipc.sock,fork TCP:$IP:7023
-$ SWAYSOCK=/tmp/swayipc swaymsg exec "firefox [URL]"
+By default, the built-in VNC server has authentication enabled and the username/password both set to `wayvnc`. To disable authentication or change the credentials, edit the `docker-compose.yml` file:
+
+```yaml
+services:
+  swayvnc-chrome:
+    ...
+    environment:
+      - WAYVNC_ENABLE_AUTH=true  # enable/disable auth
+      - WAYVNC_USERNAME=wayvnc  # set username here
+      - WAYVNC_PASSWORD=wayvnc  # set password here
 ```
 
 ## Connect
-Use a vnc client to connect to the server
+
+Use a vnc client to connect to the server.
+
 ```
 $ wlvncc <vnc-server>
 # or
 $ vinagre [vnc-server:5910]
 ```
-
-## TODO
-* Add tab rotation for the browser payload
-
-## Resources
-[W3C WebDriver Specification](https://w3c.github.io/webdriver/)  
-[Selenium/WebDriver Documentation](ww.selenium.dev/documentation/en/getting_started_with_webdriver)  
-[Mozilla geckodriver](https://github.com/mozilla/geckodriver)  
