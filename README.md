@@ -1,6 +1,6 @@
 # swayvnc-chrome
 
-swayvnc-chrome uses [Sway](https://swaywm.org) with [wayvnc](https://github.com/any1/wayvnc) to create a headless wayland desktop with a browser payload (Google Chrome), to display one or several web pages.
+swayvnc-chrome uses [Sway](https://swaywm.org) with [wayvnc](https://github.com/any1/wayvnc) to create a headless wayland desktop with a browser payload (Chrome), to display one or several web pages.
 
 ## Usage
 

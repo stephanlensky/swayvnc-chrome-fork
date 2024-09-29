@@ -1,4 +1,5 @@
 FROM archlinux:latest
+LABEL org.opencontainers.image.source="https://github.com/stephanlensky/swayvnc-chrome"
 
 ENV USER="chrome-user"
 
