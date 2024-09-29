@@ -9,19 +9,23 @@ WAYVNC_PORT="${WAYVNC_PORT:-5910}"
 WAYVNC_ENABLE_AUTH="${WAYVNC_ENABLE_AUTH:-false}"
 WAYVNC_USERNAME="${WAYVNC_USERNAME:-wayvnc}"
 WAYVNC_PASSWORD="${WAYVNC_PASSWORD:-wayvnc}"
-WAYVNC_KEY="${WAYVNC_KEY:-"/home/$USER/key.pem"}"
-WAYVNC_CERT="${WAYVNC_CERT:-"/home/$USER/cert.pem"}"
+WAYVNC_RSA_KEY="${WAYVNC_RSA_KEY:-"/certs/rsa_key.pem"}"
+WAYVNC_KEY="${WAYVNC_KEY:-"/certs/key.pem"}"
+WAYVNC_CERT="${WAYVNC_CERT:-"/certs/cert.pem"}"
 
 sed ~/.config/sway/config -i -e "s/\$SWAY_RESOLUTION/$SWAY_RESOLUTION/g"
 sed ~/.config/wayvnc/config -i -e "s/\$WAYVNC_PORT/$WAYVNC_PORT/g"
 sed ~/.config/wayvnc/config -i -e "s/\$WAYVNC_ENABLE_AUTH/$WAYVNC_ENABLE_AUTH/g"
 sed ~/.config/wayvnc/config -i -e "s/\$WAYVNC_USERNAME/$WAYVNC_USERNAME/g"
 sed ~/.config/wayvnc/config -i -e "s/\$WAYVNC_PASSWORD/$WAYVNC_PASSWORD/g"
+sed ~/.config/wayvnc/config -i -e "s|\$WAYVNC_RSA_KEY|$WAYVNC_RSA_KEY|g"
 sed ~/.config/wayvnc/config -i -e "s|\$WAYVNC_KEY|$WAYVNC_KEY|g"
 sed ~/.config/wayvnc/config -i -e "s|\$WAYVNC_CERT|$WAYVNC_CERT|g"
 
 # generate SSL certificate if it doesn't exist
-if [ ! -f "$WAYVNC_KEY" ] || [ ! -f "$WAYVNC_CERT" ]; then
+if [ ! -f "$WAYVNC_RSA_KEY" ] || [ ! -f "$WAYVNC_KEY" ] || [ ! -f "$WAYVNC_CERT" ]; then
+    echo "Generating wayvnc RSA key..."
+    ssh-keygen -m pem -f "$WAYVNC_RSA_KEY" -t rsa -N ""
     echo "Generating wayvnc SSL certificate..."
     openssl req -x509 -newkey rsa:4096 -sha256 -days 3650 -nodes \
         -keyout "$WAYVNC_KEY" -out "$WAYVNC_CERT" -subj /CN=localhost \

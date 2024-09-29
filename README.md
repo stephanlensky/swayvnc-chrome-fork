@@ -26,7 +26,7 @@ services:
 
 ## Connect
 
-Use a vnc client to connect to the server.
+Use a vnc client to connect to the server. [RealVNC Viewer](https://www.realvnc.com/en/connect/download/viewer/) is recommended for windows, or:
 
 ```
 $ wlvncc <vnc-server>

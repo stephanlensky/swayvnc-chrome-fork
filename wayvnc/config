@@ -3,5 +3,6 @@ port=$WAYVNC_PORT
 enable_auth=$WAYVNC_ENABLE_AUTH
 username=$WAYVNC_USERNAME
 password=$WAYVNC_PASSWORD
+rsa_private_key_file=$WAYVNC_RSA_KEY
 private_key_file=$WAYVNC_KEY
 certificate_file=$WAYVNC_CERT

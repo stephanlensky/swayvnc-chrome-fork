@@ -11,8 +11,13 @@ services:
       - WAYVNC_ENABLE_AUTH=true
       - WAYVNC_USERNAME=wayvnc
       - WAYVNC_PASSWORD=wayvnc
+    volumes:
+      - swayvnc-wayvnc-certs:/certs
     privileged: true
     ports:
       - 5910:5910
     devices:
       - "/dev/dri/renderD128:/dev/dri/renderD128"
+
+volumes:
+  swayvnc-wayvnc-certs:
