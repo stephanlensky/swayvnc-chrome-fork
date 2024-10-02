@@ -11,8 +11,6 @@ The latest image is always available at `ghcr.io/stephanlensky/swayvnc-chrome:la
 To run using `docker-compose`, create a new file named `docker-compose.yml` with the following contents:
 
 ```yaml
-version: "3.7"
-
 services:
   swayvnc-chrome:
     image: ghcr.io/stephanlensky/swayvnc-chrome:latest
