@@ -30,6 +30,6 @@ RUN chown -R $USER:$USER /certs
 
 USER $USER
 
-COPY entrypoint.sh /
+COPY --chown=$USER:$USER entrypoint.sh /
 WORKDIR /home/$USER
 ENTRYPOINT ["/entrypoint.sh"]
