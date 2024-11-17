@@ -2,13 +2,15 @@
 
 swayvnc-chrome uses [Sway](https://swaywm.org) with [wayvnc](https://github.com/any1/wayvnc) to create a headless, GPU-accelerated wayland desktop with a browser payload (Chrome), to display one or several web pages.
 
+GPU acceleration has currently only been tested under Linux.
+
 This project is a fork of [swayvnc-firefox](https://github.com/bbusse/swayvnc-firefox), rewritten to minimize external dependencies and improve overall configurability.
 
 ## Usage
 
 The latest image is always available at `ghcr.io/stephanlensky/swayvnc-chrome:latest`.
 
-To run using `docker-compose`, create a new file named `docker-compose.yml` with the following contents:
+To run using `docker compose`, create a new file named `docker-compose.yml` with the following contents:
 
 ```yaml
 services:
@@ -16,6 +18,8 @@ services:
     image: ghcr.io/stephanlensky/swayvnc-chrome:latest
     container_name: swayvnc-chrome
     environment:
+      # replace with GID of the group which owns the /dev/dri/renderD128 device
+      - RENDER_GROUP_ID=107
       - SWAY_RESOLUTION=1920x1080
       - WAYVNC_PORT=5910
       - WAYVNC_ENABLE_AUTH=true
@@ -28,6 +32,19 @@ services:
       - 5910:5910
     devices:
       - "/dev/dri/renderD128:/dev/dri/renderD128"
+    # optional, pass a custom command as an argument to entrypoint.sh to run it under the wayland session
+    entrypoint: [
+        "/entrypoint.sh",
+        # example for running chromium
+        "chromium",
+        "--enable-features=UseOzonePlatform",
+        "--ozone-platform=wayland",
+        "--disable-notifications",
+        "--disable-popup-blocking",
+        "--no-first-run",
+        "--disable-fre",
+        "--no-default-browser-check",
+      ]
 
 volumes:
   swayvnc-wayvnc-certs:
@@ -36,7 +53,7 @@ volumes:
 Then start the container with:
 
 ```
-docker-compose up
+docker compose up
 ```
 
 ### Authentication
