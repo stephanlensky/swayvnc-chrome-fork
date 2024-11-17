@@ -22,7 +22,7 @@ services:
     # optional, pass a custom command as an argument to entrypoint.sh to run it under the wayland session
     entrypoint: [
         "/entrypoint.sh",
-        # example for running chromium
+        # example for running chrome
         "google-chrome-stable",
         "--enable-features=UseOzonePlatform",
         "--ozone-platform=wayland",
