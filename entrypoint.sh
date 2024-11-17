@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
+# check we are running as root
+if [ "$(id -u)" -ne 0 ]; then
+    echo "fatal: entrypoint.sh script must be run as root (running as $(whoami))"
+    exit 1
+fi
+
 old_uid=$(id -u "$DOCKER_USER")
 old_gid=$(id -g "$DOCKER_USER")
 
