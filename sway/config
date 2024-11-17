@@ -5,4 +5,3 @@ for_window [app_id=".*"] border normal
 for_window [app_id=".*"] resize set 100 ppt 100 ppt
 
 exec wayvnc 0.0.0.0
-exec chromium --disable-notifications --disable-popup-blocking --no-first-run --disable-fre --no-default-browser-check

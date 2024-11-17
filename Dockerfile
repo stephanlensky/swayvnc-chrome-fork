@@ -1,24 +1,23 @@
-FROM archlinux:latest
+FROM debian:sid-slim
 LABEL org.opencontainers.image.source="https://github.com/stephanlensky/swayvnc-chrome"
 
 ARG USER=chrome-user
 ARG PUID=1000
 ARG PGID=1000
-ARG DEVICE_ACCESS_GID=107
+ARG RENDER_GROUP_GID=107
 
-ENV USER=$USER
-ENV PUID=$PUID
-ENV PGID=$PGID
-ENV DEVICE_ACCESS_GID=$DEVICE_ACCESS_GID
+ENV DOCKER_USER=$USER
 
 USER root
+RUN groupadd -g $PGID $USER
+RUN groupadd -g $RENDER_GROUP_GID docker-render
+RUN useradd -ms /bin/bash -u $PUID -g $PGID $USER
+RUN usermod -aG docker-render $USER
 
-RUN groupadd -g $PGID $USER && \
-    groupadd -g $DEVICE_ACCESS_GID gpu_access && \
-    useradd -ms /bin/bash $USER -u $PUID -g $PGID -G gpu_access
-
-# Install sway, xorg-xwayland, wayvnc, openssh (required to generate wayvnc RSA key), and chromium
-RUN pacman -Syyu --noconfirm sway xorg-xwayland wayvnc openssh chromium
+# Install Chromium and dependencies for running under wayland with VNC support
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    sway xwayland wayvnc openssh-client openssl chromium \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy sway/wayvnc configs
 COPY --chown=$USER:$USER sway/config /home/$USER/.config/sway/config
@@ -28,8 +27,7 @@ COPY --chown=$USER:$USER wayvnc/config /home/$USER/.config/wayvnc/config
 RUN mkdir /certs
 RUN chown -R $USER:$USER /certs
 
-USER $USER
-
+# Copy and set the entrypoint script
 COPY --chown=$USER:$USER entrypoint.sh /
-WORKDIR /home/$USER
+COPY --chown=$USER:$USER entrypoint_user.sh /
 ENTRYPOINT ["/entrypoint.sh"]
