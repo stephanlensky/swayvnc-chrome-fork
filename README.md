@@ -19,7 +19,7 @@ services:
     container_name: swayvnc-chrome
     environment:
       # replace with GID of the group which owns the /dev/dri/renderD128 device
-      - RENDER_GROUP_ID=107
+      - RENDER_GROUP_GID=107
       - SWAY_RESOLUTION=1920x1080
       - WAYVNC_PORT=5910
       - WAYVNC_ENABLE_AUTH=true

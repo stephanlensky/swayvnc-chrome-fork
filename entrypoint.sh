@@ -10,25 +10,21 @@ fi
 old_uid=$(id -u "$DOCKER_USER")
 old_gid=$(id -g "$DOCKER_USER")
 
-# set new uid for the non-root user and take ownership of files
-echo "Setting new UID $PUID for user $DOCKER_USER"
-usermod -u "$PUID" "$DOCKER_USER"
-set +e
-chown -Rhc "$PUID" /certs
-chown -Rhc --from="$old_uid" "$PUID" /
-set -e
-
-# set new gid for the non-root user and take ownership of files
-echo "Setting new GID $PGID for user $DOCKER_USER"
-groupmod -g "$PGID" "$DOCKER_USER"
-set +e
-chown -Rhc ":$PGID" /certs
-chown -Rhc --from=":$old_gid" ":$PGID" /
-set -e
+# set new uid/gid for the non-root user and take ownership of files
+if [ "$old_uid" != "$PUID" ] || [ "$old_gid" != "$PGID" ]; then
+    echo "Setting uid/gid $PUID:$PGID for user $DOCKER_USER"
+    usermod -u "$PUID" "$DOCKER_USER"
+    groupmod -g "$PGID" "$DOCKER_USER"
+    set +e
+    find / -path /proc -prune -o -path /sys -prune -o -uid "$old_uid" -exec chown -h "$PUID" {} +
+    find / -path /proc -prune -o -path /sys -prune -o -gid "$old_gid" -exec chown -h :"$PGID" {} +
+    set -e
+fi
 
 # set new gid for the render group if provided
-if [ -n "$RENDER_GROUP_GID" ]; then
-    echo "Setting new GID $RENDER_GROUP_GID for group docker-render"
+old_render_gid=$(getent group docker-render | cut -d: -f3)
+if [ -n "$RENDER_GROUP_GID" ] && [ "$old_render_gid" != "$RENDER_GROUP_GID" ]; then
+    echo "Setting GID $RENDER_GROUP_GID for group docker-render"
     groupmod -g "$RENDER_GROUP_GID" docker-render
 fi
 
