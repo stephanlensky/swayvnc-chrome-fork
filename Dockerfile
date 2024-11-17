@@ -16,10 +16,19 @@ RUN groupadd -g $RENDER_GROUP_GID docker-render
 RUN useradd -ms /bin/bash -u $PUID -g $PGID $USER
 RUN usermod -aG docker-render $USER
 
-# Install Chromium and dependencies for running under wayland with VNC support
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    sway xwayland wayvnc openssh-client openssl chromium \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update
+
+# Install sway/wayvnc and dependencies
+RUN apt-get install -y --no-install-recommends \
+    sway wayvnc openssh-client openssl curl ca-certificates
+
+# Install Chrome
+RUN curl -LO  https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt-get install -y ./google-chrome-stable_current_amd64.deb \
+    && rm google-chrome-stable_current_amd64.deb
+
+# Clean up apt cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy sway/wayvnc configs
 COPY --chown=$USER:$USER sway/config /home/$USER/.config/sway/config

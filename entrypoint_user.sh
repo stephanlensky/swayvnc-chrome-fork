@@ -62,11 +62,12 @@ export WAYLAND_DISPLAY
 # run the command provided by argument in the graphical session
 command=( "$@" )
 if [ ${#command[@]} -eq 0 ]; then
-    # default to starting chromium
+    # default to starting chrome
     command=(
-        "chromium"
+        "google-chrome-stable"
         "--enable-features=UseOzonePlatform"
         "--ozone-platform=wayland"
+        "--disable-dev-shm-usage"
         "--disable-notifications"
         "--disable-popup-blocking"
         "--no-first-run"

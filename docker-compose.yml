@@ -23,9 +23,10 @@ services:
     entrypoint: [
         "/entrypoint.sh",
         # example for running chromium
-        "chromium",
+        "google-chrome-stable",
         "--enable-features=UseOzonePlatform",
         "--ozone-platform=wayland",
+        "--disable-dev-shm-usage",
         "--disable-notifications",
         "--disable-popup-blocking",
         "--no-first-run",
