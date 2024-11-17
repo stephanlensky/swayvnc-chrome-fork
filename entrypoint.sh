@@ -4,10 +4,6 @@ set -e
 old_uid=$(id -u "$DOCKER_USER")
 old_gid=$(id -g "$DOCKER_USER")
 
-# get new uid/gid for the non-root user according to environment variables
-PUID=${PUID:-$old_uid}
-PGID=${PGID:-$old_gid}
-
 # set new uid for the non-root user and take ownership of files
 usermod -u "$PUID" "$DOCKER_USER" > /dev/null 2>&1
 set +e
