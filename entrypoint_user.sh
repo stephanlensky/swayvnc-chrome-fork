@@ -78,7 +78,9 @@ fi
 "${command[@]}" &
 command_pid=$!
 
+user_exit=0
 cleanup() {
+    user_exit=1
     echo "Stopping app..."
     kill -TERM $command_pid 2>/dev/null
     while ps -p $command_pid > /dev/null 2>&1; do sleep 1; done
@@ -91,9 +93,11 @@ cleanup() {
 trap cleanup TERM INT
 
 wait $command_pid
-echo "Command completed."
-echo "Stopping Wayland session..."
-kill $sway_pid 2>/dev/null
-while ps -p $sway_pid > /dev/null 2>&1; do sleep 1; done
-echo "Done."
+if [ $user_exit -ne 1 ]; then
+    echo "Command completed."
+    echo "Stopping Wayland session..."
+    kill $sway_pid 2>/dev/null
+    while ps -p $sway_pid > /dev/null 2>&1; do sleep 1; done
+    echo "Done."
+fi
 wait $sway_pid
