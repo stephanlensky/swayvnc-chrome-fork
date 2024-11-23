@@ -1,3 +1,5 @@
+# ARCHIVE. THIS REPOSITORY HAS BEEN MOVED TO https://github.com/stephanlensky/swayvnc-chrome
+
 # swayvnc-chrome
 
 swayvnc-chrome uses [Sway](https://swaywm.org) with [wayvnc](https://github.com/any1/wayvnc) to create a headless, GPU-accelerated wayland desktop with a browser payload (Google Chrome), to display one or several web pages.
